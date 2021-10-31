@@ -3,7 +3,7 @@ CREATE TABLE users (
   username VARCHAR(50) UNIQUE NOT NULL,
   password VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL,
-  email_verified BOOLEAN DEFAULT FALSE,
+  email_verified BOOLEAN,
   created_date DATE,
   last_login DATE
 );
@@ -11,16 +11,17 @@ CREATE TABLE posts (
   post_id SERIAL PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
   body TEXT NOT NULL,
-  user_id REFERENCES users(user_id),
-  like_user_id INT [],
+  user_id INT REFERENCES users(user_id),
+  like_user_id INT [] DEFAULT ARRAY []::INT [],
   created_date DATE,
-  author REFERENCE users(username),
+  author VARCHAR REFERENCES users(username),
   likes INT DEFAULT 0
 );
 CREATE TABLE comments (
   comment_id SERIAL PRIMARY KEY,
   comment TEXT NOT NULL,
-  user_id REFERENCES users(user_id),
-  post_id REFERENCES posts(post_id),
+  user_id INT REFERENCES users(user_id),
+  post_id INT REFERENCES posts(post_id),
+  author VARCHAR REFERENCES users(username),
   created_date DATE
 )
