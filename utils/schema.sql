@@ -24,4 +24,4 @@ CREATE TABLE comments (
   post_id INT REFERENCES posts(post_id),
   author VARCHAR REFERENCES users(username),
   created_date DATE
-)
+);
