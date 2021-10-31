@@ -18,3 +18,5 @@
 
 # Check again
 `\dt;`
+## To check table 
+`\d users;`
