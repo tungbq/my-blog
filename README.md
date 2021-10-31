@@ -20,3 +20,6 @@
 `\dt;`
 ## To check table 
 `\d users;`
+
+# Use express generator to create or server
+https://www.section.io/engineering-education/nodejs-app-express-generator
