@@ -23,3 +23,6 @@
 
 # Use express generator to create or server
 https://www.section.io/engineering-education/nodejs-app-express-generator
+
+# Start server
+`cd server && npm run dev`

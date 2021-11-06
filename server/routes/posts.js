@@ -23,7 +23,6 @@ router.post('/', async (req, res) => {
 				created_date,
 			]
 		);
-		console.log(response.rows);
 		res.status(201).json(response.rows);
 	} catch (error) {
 		console.error({ error });
@@ -35,12 +34,34 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
 	try {
 		const response = await db.query('SELECT * FROM posts');
-		console.log(response.rows);
-		res.status(201).json(response.rows);
+		res.status(200).json(response.rows);
 	} catch (error) {
-		console.error({ error });
 		res.status(500).json({ error });
 	}
 });
+
+// Update posts with ID
+router.put('/:id', async (req, res) => {
+	try {
+		const response = await db.query(
+			'UPDATE posts SET title=$1, body=$2 WHERE posts.post_id=$3 RETURNING *',
+			[req.body.title, req.body.body, req.params.id]
+		);
+		res.status(200).json(response.rows)
+	} catch (error) {
+		res.status(500).json({ error });
+	}
+});
+
+// Delete posts with ID
+router.delete('/:id', async (req, res) => {
+	try {
+		const response = await db.query('DELETE FROM posts WHERE posts.post_id=$1 RETURNING *', [req.params.id])
+		res.status(200).json(response.rows)
+		// TODO: Handle case the post has already deleted!
+	} catch (error) {
+		res.status(500).json({error})
+	}
+})
 
 module.exports = router;
