@@ -17,12 +17,70 @@ router.post('/', async (req, res) => {
 			'INSERT INTO users (username, password, email, created_date) VALUES ($1, $2, $3, $4) RETURNING *',
 			[req.body.username, req.body.password, req.body.email, created_date]
 		);
-		console.log(response.rows);
 		res.status(201).json(response.rows);
 	} catch (error) {
 		console.error({ error });
 		res.status(500).json({ error });
 	}
 });
+
+// Get all users
+router.get('/', async (req, res) => {
+	try {
+		const response = await db.query(
+			'SELECT user_id, username, email, email_verified, created_date, last_login FROM users'
+		);
+		res.status(200).json(response.rows);
+	} catch (error) {
+		res.status(500).json({ error });
+	}
+});
+
+// Get post with specific ID
+router.get('/:id', async (req, res) => {
+	try {
+		const response = await db.query(
+			'SELECT user_id, username, email, email_verified, created_date, last_login FROM users WHERE users.user_id=$1',
+			[req.params.id]
+		);
+		res.status(200).json(response.rows);
+	} catch (error) {
+		res.status(500).json({ error });
+	}
+});
+
+// Update users with ID
+router.put('/:id', async (req, res) => {
+	try {
+		const response = await db.query(
+			'UPDATE users SET username = $1, email = $2, password = $3, email_verified = $4, last_login = $5 WHERE users.user_id=$6 RETURNING *',
+			[
+				req.body.user,
+				req.body.email,
+				req.body.password,
+				req.body.email_verified,
+				req.body.last_login,
+				req.params.id,
+			]
+		);
+		res.status(200).json(response.rows);
+	} catch (error) {
+		res.status(500).json({ error });
+	}
+});
+
+// // Delete users with ID, SKIP FOR NOW
+// router.delete('/:id', async (req, res) => {
+// 	try {
+// 		const response = await db.query(
+// 			'DELETE FROM users WHERE users.user_id=$1 RETURNING *',
+// 			[req.params.id]
+// 		);
+// 		res.status(200).json(response.rows);
+// 		// TODO: Handle case the user has already deleted!
+// 	} catch (error) {
+// 		res.status(500).json({ error });
+// 	}
+// });
 
 module.exports = router;
