@@ -4,6 +4,21 @@ require('dotenv').config();
 
 const db = require('../db');
 
+// The route /users/posts must be declared before /users/:id to avoid unexpected error!
+// Get all posts of user
+router.get('/posts', async (req, res) => {
+	try {
+		const username = String(req.query.username);
+		const response = await db.query(
+			'SELECT * FROM posts WHERE posts.author = $1',
+			[username]
+		);
+		res.status(200).json(response.rows);
+	} catch (error) {
+		res.status(500).json(error);
+	}
+});
+
 // Create user
 router.post('/', async (req, res) => {
 	var date_ob = new Date();
