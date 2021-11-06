@@ -40,6 +40,16 @@ router.get('/', async (req, res) => {
 	}
 });
 
+// Get post with specific ID
+router.get('/:id', async (req, res) => {
+	try {
+		const response = await db.query('SELECT * FROM posts WHERE posts.post_id=$1', [req.params.id]);
+		res.status(200).json(response.rows);
+	} catch (error) {
+		res.status(500).json({ error });
+	}
+});
+
 // Update posts with ID
 router.put('/:id', async (req, res) => {
 	try {
